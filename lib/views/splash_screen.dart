@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pizza_order/shared/shared.dart';
+import 'package:pizza_order/views/cart_screen.dart';
+import 'package:pizza_order/views/dish_details_screen.dart';
 import 'package:pizza_order/views/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       const Duration(seconds: 7),
       () => navigateAndRemove(
         context,
-        page: const HomeScreen(),
+        page: const DishDetailsScreen(),
       ),
     );
     super.initState();
