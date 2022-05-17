@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
         title: 'Pizza Order',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.red,
-          primaryColor: Colors.redAccent,
+          primarySwatch: Colors.amber,
+          primaryColor: const Color(0xFFFFC56B),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: const SplashScreen(),

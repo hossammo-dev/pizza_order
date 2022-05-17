@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(height: 20),
                                 Text(
                                   // 'EGP 105',
-                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].price}',
+                                  'EGP ${Provider.of<MainProvider>(context, listen: false).dishesList[index].price}',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
