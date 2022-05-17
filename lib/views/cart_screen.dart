@@ -40,7 +40,7 @@ class CartScreen extends StatelessWidget {
                       ],
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.pop(context),
                       icon: const Icon(
                         EvaIcons.close,
                         color: Colors.black,

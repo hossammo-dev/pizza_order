@@ -1,8 +1,15 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+// import 'package:pizza_order/providers/main_provider.dart';
+import 'package:pizza_order/shared/shared.dart';
+import 'package:pizza_order/views/cart_screen.dart';
+// import 'package:provider/provider.dart';
+
+import '../models/dish_model.dart';
 
 class DishDetailsScreen extends StatefulWidget {
-  const DishDetailsScreen({Key? key}) : super(key: key);
+  final DishModel? dish;
+  const DishDetailsScreen({Key? key, this.dish}) : super(key: key);
 
   @override
   State<DishDetailsScreen> createState() => _DishDetailsScreenState();
@@ -16,6 +23,58 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
     'M',
     'L',
   ];
+
+  int _cheese = 1;
+  bool _onion = false;
+  bool _bacon = false;
+  bool _beef = false;
+
+  @override
+  void initState() {
+    // Future.delayed(
+    //     const Duration(seconds: 2),
+    //     () => Provider.of<MainProvider>(context, listen: false)
+    //         .getDishData(collection: 'products', dishId: widget.dish));
+    super.initState();
+  }
+
+  void _changeCheeseValue({String? operation}) {
+    if (operation == 'i') {
+      //increment
+      setState(() {
+        _cheese++;
+      });
+    } else {
+      //decrement
+      if (_cheese > 1) {
+        setState(() {
+          _cheese--;
+        });
+      }
+    }
+  }
+
+  void _changeIngredients({String? ingredient}) {
+    switch (ingredient) {
+      case "Onion":
+        setState(() {
+          _onion = !_onion;
+        });
+        break;
+
+      case "Bacon":
+        setState(() {
+          _bacon = !_bacon;
+        });
+        break;
+
+      case "Beef":
+        setState(() {
+          _beef = !_beef;
+        });
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +97,15 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          Image.network(
-                            'https://images.phi.content-cdn.io/cdn-cgi/image/height=170,width=180,quality=50/https://martjackamstorage.azureedge.net/am-resources/c3877a59-69f7-40fa-bb17-ae5b9ac37732/Images/ProductImages/Large/Margherita-p1.png',
-                          ),
+                          // Image.network(
+                          //   'https://images.phi.content-cdn.io/cdn-cgi/image/height=170,width=180,quality=50/https://martjackamstorage.azureedge.net/am-resources/c3877a59-69f7-40fa-bb17-ae5b9ac37732/Images/ProductImages/Large/Margherita-p1.png',
+                          // ),
+                          Image.network('${widget.dish!.imageUrl}'),
                           Positioned(
                             top: 0,
                             right: 0,
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed: () => Navigator.pop(context),
                               icon: const Icon(
                                 EvaIcons.close,
                                 color: Colors.black,
@@ -73,9 +133,10 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Spicy Chicken Ranch',
-                      style: TextStyle(
+                    Text(
+                      // 'Spicy Chicken Ranch',
+                      '${widget.dish!.name}',
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -84,8 +145,8 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children:  [
+                        const Text(
                           'with garlic',
                           style: TextStyle(
                             color: Colors.grey,
@@ -93,8 +154,9 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                           ),
                         ),
                         Text(
-                          'EGP 105',
-                          style: TextStyle(
+                          // 'EGP 105',
+                          'EGP ${widget.dish!.price}',
+                          style: const TextStyle(
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -151,15 +213,16 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                                 Row(
                                   children: [
                                     IconButton(
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          _changeCheeseValue(operation: 'd'),
                                       icon: const Icon(EvaIcons.minus),
                                     ),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8.0),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
                                       child: Text(
-                                        '1',
-                                        style: TextStyle(
+                                        _cheese.toString(),
+                                        style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600,
@@ -167,7 +230,8 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          _changeCheeseValue(operation: 'i'),
                                       icon: const Icon(EvaIcons.plus),
                                     ),
                                   ],
@@ -185,26 +249,46 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                                     fontSize: 18,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(EvaIcons.plus),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      const Text(
-                                        'Add',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
+                                (_onion)
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 16.0),
+                                        child: GestureDetector(
+                                          onTap: () => _changeIngredients(
+                                              ingredient: 'Onion'),
+                                          child: const Text(
+                                            'Added',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 16.0),
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () =>
+                                                  _changeIngredients(
+                                                      ingredient: 'Onion'),
+                                              icon: const Icon(EvaIcons.plus),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            const Text(
+                                              'Add',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -218,26 +302,46 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                                     fontSize: 18,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(EvaIcons.plus),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      const Text(
-                                        'Add',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
+                                (_bacon)
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 16.0),
+                                        child: GestureDetector(
+                                          onTap: () => _changeIngredients(
+                                              ingredient: 'Bacon'),
+                                          child: const Text(
+                                            'Added',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 16.0),
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () =>
+                                                  _changeIngredients(
+                                                      ingredient: 'Bacon'),
+                                              icon: const Icon(EvaIcons.plus),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            const Text(
+                                              'Add',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -251,26 +355,46 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                                     fontSize: 18,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(EvaIcons.plus),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      const Text(
-                                        'Add',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600,
+                                (_beef)
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 16.0),
+                                        child: GestureDetector(
+                                          onTap: () => _changeIngredients(
+                                              ingredient: 'Beef'),
+                                          child: const Text(
+                                            'Added',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 16.0),
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () =>
+                                                  _changeIngredients(
+                                                      ingredient: 'Beef'),
+                                              icon: const Icon(EvaIcons.plus),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            const Text(
+                                              'Add',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 20),
@@ -351,10 +475,24 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(
-          EvaIcons.shoppingBagOutline,
-          color: Colors.black,
+        onPressed: () => navigateTo(
+          context,
+          page: const CartScreen(),
+        ),
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: const [
+            Icon(
+              EvaIcons.shoppingBagOutline,
+              color: Colors.black,
+            ),
+
+            //TODO: CART BADGE
+            //  CircleAvatar(
+            //   radius: 5,
+            //   backgroundColor: const Color(0XFFFFC56A),
+            // ),
+          ],
         ),
         // backgroundColor: const Color(0XFFFFC56A),
         backgroundColor: Colors.white,

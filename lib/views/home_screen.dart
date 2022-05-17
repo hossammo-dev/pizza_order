@@ -1,5 +1,12 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pizza_order/providers/main_provider.dart';
+
+import 'package:provider/provider.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:pizza_order/services/location_services.dart';
+import 'package:pizza_order/shared/shared.dart';
+import 'package:pizza_order/views/cart_screen.dart';
+import 'package:pizza_order/views/dish_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,6 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 2), () {
+      Provider.of<LocationServices>(context, listen: false).getLocation();
+      Provider.of<MainProvider>(context, listen: false).getFavoriteDishes();
+      // Provider.of<MainProvider>(context, listen: false).getLunchDishes();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -36,12 +53,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Icon(EvaIcons.menu2Outline, color: Colors.black),
                     Row(
-                      children: const [
-                        Icon(EvaIcons.navigation2Outline, color: Colors.grey),
-                        SizedBox(width: 5),
-                        Text(
-                          'Egypt, Damietta, New Damietta',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                      children: [
+                        const Icon(EvaIcons.navigation2Outline,
+                            color: Colors.grey),
+                        const SizedBox(width: 5),
+                        Container(
+                          constraints: const BoxConstraints(
+                            maxWidth: 250,
+                          ),
+                          child: Text(
+                            // 'Egypt, Damietta, New Damietta',
+                            Provider.of<LocationServices>(context, listen: true)
+                                .address,
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.grey),
+                          ),
                         ),
                       ],
                     ),
@@ -64,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 46,
                   child: ListView.builder(
-                    itemCount: 5,
+                    itemCount: _categoriesList.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => GestureDetector(
                       onTap: () => _changeCurrentIndex(index),
@@ -116,65 +142,85 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.39,
+                  height: MediaQuery.of(context).size.height * 0.42,
                   child: ListView.builder(
-                    itemCount: 5,
+                    itemCount: Provider.of<MainProvider>(context, listen: false)
+                        .dishesList
+                        .length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.39,
+                      height: MediaQuery.of(context).size.height * 0.42,
                       // width: MediaQuery.of(context).size.width * 0.6,
-                      child: Card(
-                        color: Colors.white,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        shadowColor: const Color(0XFFF6F6F6),
-                        elevation: 6.5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
-                                alignment: Alignment.topRight,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.network(
-                                        'https://images.phi.content-cdn.io/cdn-cgi/image/height=170,width=180,quality=50/https://martjackamstorage.azureedge.net/am-resources/c3877a59-69f7-40fa-bb17-ae5b9ac37732/Images/ProductImages/Large/Margherita-p1.png'),
+                      child: GestureDetector(
+                        onTap: () => navigateTo(context,
+                            page: DishDetailsScreen(
+                                dish: Provider.of<MainProvider>(context,
+                                        listen: false)
+                                    .dishesList[index])),
+                        child: Card(
+                          color: Colors.white,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          shadowColor: const Color(0XFFF6F6F6),
+                          elevation: 6.5,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      // child: Image.network(
+                                      //     'https://images.phi.content-cdn.io/cdn-cgi/image/height=170,width=180,quality=50/https://martjackamstorage.azureedge.net/am-resources/c3877a59-69f7-40fa-bb17-ae5b9ac37732/Images/ProductImages/Large/Margherita-p1.png'),
+                                      child: Image.network(
+                                          '${Provider.of<MainProvider>(context, listen: false).dishesList[index].imageUrl}'),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon:
+                                            const Icon(EvaIcons.heartOutline)),
+                                  ],
+                                ),
+                                Container(
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 200),
+                                  child: Text(
+                                    // 'Pizza Name',
+                                    '${Provider.of<MainProvider>(context, listen: false).dishesList[index].name}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(EvaIcons.heartOutline)),
-                                ],
-                              ),
-                              const Text(
-                                'Pizza Name',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
                                 ),
-                              ),
-                              const SizedBox(height: 5),
-                              const Text(
-                                'Category',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
+                                const SizedBox(height: 5),
+                                Text(
+                                  // 'Category',
+                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].category}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 5),
-                              const Text(
-                                'EGP 105',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                // const SizedBox(height: 10),
+                                const Spacer(),
+                                Text(
+                                  // 'EGP 105',
+                                  'EGP ${Provider.of<MainProvider>(context, listen: false).dishesList[index].price}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -193,58 +239,76 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
                 ListView.builder(
-                  itemCount: 10,
+                  itemCount: Provider.of<MainProvider>(context, listen: false)
+                      .dishesList
+                      .length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) => Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => navigateTo(
+                      context,
+                      page: const DishDetailsScreen(),
                     ),
-                    shadowColor: const Color(0xFFFFEECB),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Dish Name',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
+                    child: Card(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      shadowColor: const Color(0xFFFFEECB),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 180,
+                                  ),
+                                  child: Text(
+                                    // 'Dish Name',
+                                    '${Provider.of<MainProvider>(context, listen: false).dishesList[index].name}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                'Category',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
+                                const SizedBox(height: 5),
+                                Text(
+                                  // 'Category',
+                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].category}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 20),
-                              Text(
-                                'EGP 105',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                const SizedBox(height: 20),
+                                Text(
+                                  // 'EGP 105',
+                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].price}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 150,
-                            width: 150,
-                            child: Image.network(
-                                'https://www.elmohamdy.com/uploads/meals/IMG_345621645508611.png'),
-                          )
-                        ],
+                              ],
+                            ),
+                            SizedBox(
+                              height: 150,
+                              width: 150,
+                              // child: Image.network(
+                              //     'https://www.elmohamdy.com/uploads/meals/IMG_345621645508611.png'),
+                              child: Image.network(
+                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].imageUrl}'),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -255,7 +319,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => navigateTo(
+          context,
+          page: const CartScreen(),
+        ),
         child: const Icon(
           EvaIcons.shoppingBagOutline,
           color: Colors.black,
