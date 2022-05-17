@@ -15,6 +15,12 @@ class FirebaseServices {
       await _auth.signInWithEmailAndPassword(
           email: email!, password: password!);
 
+  static Future<void> saveData(
+          {required String? collection,
+          required String? id,
+          required Map<String, dynamic>? data}) async =>
+      await _firestoreDb.collection(collection!).doc(id).set(data!);
+
   static Future<QuerySnapshot<Map<String, dynamic>>> getAllData(
           String collection) async =>
       await _firestoreDb.collection(collection).get();

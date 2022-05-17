@@ -1,6 +1,10 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pizza_order/providers/auth_provider.dart';
+import 'package:pizza_order/shared/shared.dart';
+import 'package:pizza_order/views/home_screen.dart';
+import 'package:provider/provider.dart';
 
 class LoginAndRegisterScreen extends StatefulWidget {
   const LoginAndRegisterScreen({Key? key}) : super(key: key);
@@ -134,8 +138,27 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                   const SizedBox(height: 30),
                   MaterialButton(
                     onPressed: () {
-                      if (_isLogin) {
-                      } else {}
+                      if (_formKey.currentState!.validate()) {
+                        if (_isLogin) {
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .logUserIn(
+                                email: _emailController!.text,
+                                password: _passController!.text,
+                              )
+                              .then((value) => navigateAndRemove(context,
+                                  page: const HomeScreen()));
+                        } else {
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .createAccount(
+                                username: _nameController!.text,
+                                email: _emailController!.text,
+                                phoneNumber: _numberController!.text,
+                                password: _passController!.text,
+                              )
+                              .then((value) => navigateAndRemove(context,
+                                  page: const HomeScreen()));
+                        }
+                      }
                     },
                     elevation: 7.5,
                     color: const Color(0xFFFFC56B),

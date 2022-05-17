@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pizza_order/providers/auth_provider.dart';
 import 'package:pizza_order/providers/main_provider.dart';
 import 'package:pizza_order/services/location_services.dart';
 import 'package:pizza_order/views/splash_screen.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => LocationServices()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => MainProvider()),
       ],
       child: MaterialApp(
