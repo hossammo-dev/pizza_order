@@ -1,8 +1,10 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pizza_order/providers/cart_provider.dart';
 // import 'package:pizza_order/providers/main_provider.dart';
 import 'package:pizza_order/shared/shared.dart';
 import 'package:pizza_order/views/cart_screen.dart';
+import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
 
 import '../models/dish_model.dart';
@@ -25,18 +27,10 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
   ];
 
   int _cheese = 1;
+  int _quantity = 1;
   bool _onion = false;
   bool _bacon = false;
   bool _beef = false;
-
-  @override
-  void initState() {
-    // Future.delayed(
-    //     const Duration(seconds: 2),
-    //     () => Provider.of<MainProvider>(context, listen: false)
-    //         .getDishData(collection: 'products', dishId: widget.dish));
-    super.initState();
-  }
 
   void _changeCheeseValue({String? operation}) {
     if (operation == 'i') {
@@ -49,6 +43,22 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
       if (_cheese > 1) {
         setState(() {
           _cheese--;
+        });
+      }
+    }
+  }
+
+  void _changeQuantityValue({String? operation}) {
+    if (operation == 'i') {
+      //increment
+      setState(() {
+        _quantity++;
+      });
+    } else {
+      //decrement
+      if (_quantity > 1) {
+        setState(() {
+          _quantity--;
         });
       }
     }
@@ -97,9 +107,6 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          // Image.network(
-                          //   'https://images.phi.content-cdn.io/cdn-cgi/image/height=170,width=180,quality=50/https://martjackamstorage.azureedge.net/am-resources/c3877a59-69f7-40fa-bb17-ae5b9ac37732/Images/ProductImages/Large/Margherita-p1.png',
-                          // ),
                           Image.network('${widget.dish!.imageUrl}'),
                           Positioned(
                             top: 0,
@@ -134,7 +141,6 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      // 'Spicy Chicken Ranch',
                       '${widget.dish!.name}',
                       style: const TextStyle(
                         color: Colors.black,
@@ -145,7 +151,7 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:  [
+                      children: [
                         const Text(
                           'with garlic',
                           style: TextStyle(
@@ -172,7 +178,7 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
               Stack(
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.55,
+                    height: MediaQuery.of(context).size.height * 0.61,
                     width: double.infinity,
                     child: Card(
                       color: Colors.white,
@@ -200,6 +206,44 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Quantity',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () =>
+                                          _changeQuantityValue(operation: 'd'),
+                                      icon: const Icon(EvaIcons.minus),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Text(
+                                        _quantity.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () =>
+                                          _changeQuantityValue(operation: 'i'),
+                                      icon: const Icon(EvaIcons.plus),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -400,7 +444,19 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                             const SizedBox(height: 20),
                             Center(
                               child: MaterialButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Provider.of<CartProvider>(context,
+                                          listen: false)
+                                      .addItem(
+                                    quantity: _quantity,
+                                    size: _sizes[_currentIndex],
+                                    dishModel: widget.dish!,
+                                    cheese: _cheese,
+                                    onion: _onion,
+                                    bacon: _bacon,
+                                    beef: _beef,
+                                  );
+                                },
                                 elevation: 7.5,
                                 color: const Color(0xFFFFC56B),
                                 shape: RoundedRectangleBorder(
@@ -412,7 +468,6 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
                                   'Add to cart',
                                   style: TextStyle(
                                     color: Colors.black,
-                                    // fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
                                 ),

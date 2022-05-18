@@ -1,11 +1,15 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pizza_order/providers/cart_provider.dart';
+import 'package:pizza_order/services/location_services.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _cart = Provider.of<CartProvider>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -54,29 +58,46 @@ class CartScreen extends StatelessWidget {
                 SizedBox(
                   height: 250,
                   child: ListView.builder(
-                    itemCount: 10,
+                    itemCount: Provider.of<CartProvider>(context, listen: true)
+                        .cartList
+                        .length,
                     physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => ListTile(
-                      minVerticalPadding: 16,
-                      leading: Card(
-                        color: Colors.white,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                    itemBuilder: (context, index) {
+                      final _cartItemsList =
+                          Provider.of<CartProvider>(context, listen: false)
+                              .cartList
+                              .values
+                              .toList()[index];
+                      return ListTile(
+                        minVerticalPadding: 16,
+                        leading: Card(
+                          color: Colors.white,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Image.network(_cartItemsList.dishImageUrl!),
                         ),
-                        child: Image.network(
-                            'https://images.phi.content-cdn.io/cdn-cgi/image/height=170,width=180,quality=50/https://martjackamstorage.azureedge.net/am-resources/c3877a59-69f7-40fa-bb17-ae5b9ac37732/Images/ProductImages/Large/Margherita-p1.png'),
-                      ),
-                      title: const Text('Spicy Chicken Ranch'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text('x2 cheese'),
-                          Text('x1 olives'),
-                        ],
-                      ),
-                      trailing: const Text('EGP 105'),
-                    ),
+                        title: Text(_cartItemsList.dishName!),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Size: ${_cartItemsList.size}'),
+                            Text('x${_cartItemsList.cheese} cheese'),
+                            if (_cartItemsList.onion!) const Text('x1 onion'),
+                            if (_cartItemsList.bacon!) const Text('x1 bacon'),
+                            if (_cartItemsList.beef!) const Text('x1 beef'),
+                          ],
+                        ),
+                        trailing: Column(
+                          children: [
+                            Text('EGP ${_cartItemsList.dishPrice}'),
+                            const SizedBox(height: 5),
+                            Text('${_cartItemsList.quantity.toString()}X'),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const Divider(),
@@ -96,7 +117,9 @@ class CartScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             _buildCardTile(
-                              title: 'Egypt, Damietta, New Damietta',
+                              title: Provider.of<LocationServices>(context,
+                                      listen: false)
+                                  .address,
                               leadingIcon: EvaIcons.pinOutline,
                               onEditPressed: () {},
                             ),
@@ -123,8 +146,8 @@ class CartScreen extends StatelessWidget {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Subtotal',
                           style: TextStyle(
                             color: Colors.grey,
@@ -132,8 +155,8 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'EGP 1050',
-                          style: TextStyle(
+                          'EGP ${_cart.totalPrice}',
+                          style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 16,
                           ),
@@ -163,8 +186,8 @@ class CartScreen extends StatelessWidget {
                     const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Total',
                           style: TextStyle(
                             color: Colors.black,
@@ -173,8 +196,8 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'EGP 1060',
-                          style: TextStyle(
+                          'EGP ${_cart.totalPrice + 10}',
+                          style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,

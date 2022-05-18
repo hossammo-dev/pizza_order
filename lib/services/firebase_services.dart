@@ -16,10 +16,22 @@ class FirebaseServices {
           email: email!, password: password!);
 
   static Future<void> saveData(
-          {required String? collection,
-          required String? id,
-          required Map<String, dynamic>? data}) async =>
-      await _firestoreDb.collection(collection!).doc(id).set(data!);
+      {required String? collection,
+      String? secondCollection,
+      required String? id,
+      String? secondId,
+      required Map<String, dynamic>? data}) async {
+    if (secondCollection == null) {
+      return await _firestoreDb.collection(collection!).doc(id).set(data!);
+    }
+    //else
+    return await _firestoreDb
+        .collection(collection!)
+        .doc(id)
+        .collection(secondCollection)
+        .doc(secondId)
+        .set(data!);
+  }
 
   static Future<QuerySnapshot<Map<String, dynamic>>> getAllData(
           String collection) async =>

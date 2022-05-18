@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pizza_order/helpers/cache_helper.dart';
 import 'package:pizza_order/providers/auth_provider.dart';
 import 'package:pizza_order/shared/shared.dart';
 import 'package:pizza_order/views/home_screen.dart';
@@ -158,6 +159,7 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                               .then((value) => navigateAndRemove(context,
                                   page: const HomeScreen()));
                         }
+                        CacheHelper.save(key: 'authenticated', value: true);
                       }
                     },
                     elevation: 7.5,
@@ -241,9 +243,13 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
             color: Colors.grey,
             fontSize: 14,
           ),
-          prefix: Icon(
-            prefixIcon,
-            color: Colors.black,
+          prefix: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Icon(
+              prefixIcon,
+              color: Colors.black,
+              size: 20,
+            ),
           ),
           suffix: (isPassword)
               ? IconButton(

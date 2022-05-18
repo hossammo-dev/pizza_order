@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_final_fields
 
 import 'package:flutter/material.dart';
+import 'package:pizza_order/constants.dart';
 import 'package:pizza_order/models/dish_model.dart';
+import 'package:pizza_order/models/order_model.dart';
 import 'package:pizza_order/services/firebase_services.dart';
+import 'package:uuid/uuid.dart';
 
 class MainProvider extends ChangeNotifier {
   // DishModel? _dishModel;
@@ -19,7 +22,7 @@ class MainProvider extends ChangeNotifier {
       for (var element in value.docs) {
         _dishesList.add(DishModel.fromJson(element.data()));
       }
-      debugPrint('--- ${_dishesList[0].id}'); 
+      debugPrint('--- ${_dishesList[0].id}');
     });
     notifyListeners();
   }
@@ -32,11 +35,31 @@ class MainProvider extends ChangeNotifier {
     });
   }
 
-  // void getDishData({String? collection, String? dishId}) async {
-  //   await FirebaseServices.getData(collection: collection, id: dishId)
-  //       .then((value) {
-  //     _dishModel = DishModel.fromJson(value.data() as Map<String, dynamic>);
-  //     debugPrint('--- ${_dishModel!.name}');
-  //   });
+  // void addOrder({
+  //   required DishModel? dishModel,
+  //   required String? size,
+  //   int? cheese,
+  //   bool? onion,
+  //   bool? bacon,
+  //   bool? beef,
+  // }) async {
+  //   final String? _orderId = const Uuid().v4();
+
+  //   OrderModel _orderModel = OrderModel(
+  //     id: _orderId,
+  //     uid: Constants.userId,
+  //     dishId: dishModel!.id,
+  //     size: size,
+  //     cheese: cheese,
+  //     onion: onion,
+  //     bacon: bacon,
+  //     beef: beef,
+  //     time: DateTime.now(),
+  //   );
+  //   await FirebaseServices.saveData(
+  //     collection: 'orders',
+  //     id: _orderId,
+  //     data: _orderModel.toJson(),
+  //   );
   // }
 }
