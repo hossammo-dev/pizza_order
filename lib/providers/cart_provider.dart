@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pizza_order/constants.dart';
 import 'package:pizza_order/models/cart_model.dart';
 import 'package:pizza_order/models/dish_model.dart';
+import 'package:pizza_order/services/firebase_services.dart';
+import 'package:uuid/uuid.dart';
 
 class CartProvider extends ChangeNotifier {
-  final Map<String, CartItemModel> _cartList = {};
+  Map<String, CartItemModel> _cartList = {};
   Map<String, CartItemModel> get cartList => _cartList;
 
   int get totalPrice {
@@ -13,6 +17,15 @@ class CartProvider extends ChangeNotifier {
     });
     return _total;
   }
+
+  // void getCartData() {
+  //   print('--1--');
+  //   final String _data = CacheHelper.get('cart_list') ?? 'empty';
+  //   // _cartList.addAll(_data);
+  //   _cartList = jsonDecode(_data);
+  //   print(_data);
+  //   notifyListeners();
+  // }
 
   void addItem({
     required String size,
@@ -54,6 +67,33 @@ class CartProvider extends ChangeNotifier {
     //     ),
     //   );
     // }
+    // final String _tempData = json.encode(_cartList);
+    // CacheHelper.save(key: 'cart_list', value: _tempData);
+    notifyListeners();
+  }
+
+  Future<void> makeOrder({
+    required String? location,
+    required String? estimatedTime,
+    required String? paymentMethod,
+  }) async {
+    String? _orderId = const Uuid().v4();
+    final List<CartItemModel> _tempList = _cartList.values.toList();
+    await FirebaseServices.saveData(
+      collection: 'orders',
+      id: _orderId,
+      data: {
+        'id': _orderId,
+        'uid': Constants.userId,
+        'location': location,
+        'estimated_time': estimatedTime,
+        'payment_method': paymentMethod,
+        'cart_items': _tempList.map((e) => e.toJson()).toList(),
+      },
+    ).whenComplete(() {
+      _cartList = {};
+      print('isEmpty: ${_cartList.isEmpty}');
+    });
     notifyListeners();
   }
 }

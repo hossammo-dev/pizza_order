@@ -1,22 +1,31 @@
 class CartModel {
   String? id;
   String? uid;
-  // CartItemModel? cartItemModel;
+  List<CartItemModel>? cartItemsList;
   String? location;
   String? estimatedTime;
   String? paymentMethod;
-  int? subTotal;
   int? total;
 
   CartModel({
     this.id,
     this.uid,
     this.location,
+    this.cartItemsList,
     this.estimatedTime,
     this.paymentMethod,
-    this.subTotal,
     this.total,
   });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'uid': uid,
+        'location': location,
+        'cart_items_list': cartItemsList,
+        'estimated_time': estimatedTime,
+        'payment_method': paymentMethod,
+        'total': total,
+      };
 }
 
 class CartItemModel {
@@ -41,4 +50,16 @@ class CartItemModel {
     this.bacon,
     this.beef,
   });
+
+  Map<String, dynamic> toJson() => {
+        'image_url': dishImageUrl,
+        'name': dishName,
+        'price': dishPrice,
+        'size': size,
+        'quantity': quantity,
+        'cheese': cheese,
+        'onion': onion,
+        'bacon': bacon,
+        'beef': beef,
+      };
 }

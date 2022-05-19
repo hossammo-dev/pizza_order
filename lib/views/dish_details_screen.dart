@@ -178,7 +178,7 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
               Stack(
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.61,
+                    height: MediaQuery.of(context).size.height * 0.73,
                     width: double.infinity,
                     child: Card(
                       color: Colors.white,

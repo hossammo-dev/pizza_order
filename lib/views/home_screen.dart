@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pizza_order/providers/cart_provider.dart';
 import 'package:pizza_order/providers/main_provider.dart';
 
 import 'package:provider/provider.dart';
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       Provider.of<LocationServices>(context, listen: false).getLocation();
       Provider.of<MainProvider>(context, listen: false).getFavoriteDishes();
-      // Provider.of<MainProvider>(context, listen: false).getLunchDishes();
+      // Provider.of<CartProvider>(context, listen: false).getCartData();
     });
     super.initState();
   }
@@ -142,14 +143,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.42,
+                  height: MediaQuery.of(context).size.height * 0.48,
                   child: ListView.builder(
                     itemCount: Provider.of<MainProvider>(context, listen: false)
                         .dishesList
                         .length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.42,
+                      height: MediaQuery.of(context).size.height * 0.48,
                       // width: MediaQuery.of(context).size.width * 0.6,
                       child: GestureDetector(
                         onTap: () => navigateTo(context,
@@ -247,7 +248,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) => GestureDetector(
                     onTap: () => navigateTo(
                       context,
-                      page: const DishDetailsScreen(),
+                      page: DishDetailsScreen(
+                        dish: Provider.of<MainProvider>(context, listen: false)
+                            .dishesList[index],
+                      ),
                     ),
                     child: Card(
                       clipBehavior: Clip.antiAliasWithSaveLayer,

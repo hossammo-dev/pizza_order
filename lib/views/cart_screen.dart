@@ -2,7 +2,10 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pizza_order/providers/cart_provider.dart';
 import 'package:pizza_order/services/location_services.dart';
+import 'package:pizza_order/shared/shared.dart';
 import 'package:provider/provider.dart';
+
+import 'home_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -208,7 +211,15 @@ class CartScreen extends StatelessWidget {
                     const SizedBox(height: 25),
                     Center(
                       child: MaterialButton(
-                        onPressed: () {},
+                        onPressed: () =>
+                            Provider.of<CartProvider>(context, listen: false)
+                                .makeOrder(
+                                  location: 'Egypt, Damietta, New Damietta',
+                                  estimatedTime: '25-30',
+                                  paymentMethod: 'cash',
+                                )
+                                .whenComplete(() => navigateAndRemove(context,
+                                    page: const HomeScreen())),
                         elevation: 7.5,
                         color: const Color(0xFFFFC56B),
                         shape: RoundedRectangleBorder(
