@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:pizza_order/mini_views/map_screen.dart';
 import 'package:pizza_order/providers/cart_provider.dart';
 import 'package:pizza_order/services/location_services.dart';
 import 'package:pizza_order/shared/shared.dart';
@@ -121,10 +122,11 @@ class CartScreen extends StatelessWidget {
                           children: [
                             _buildCardTile(
                               title: Provider.of<LocationServices>(context,
-                                      listen: false)
+                                      listen: true)
                                   .address,
                               leadingIcon: EvaIcons.pinOutline,
-                              onEditPressed: () {},
+                              onEditPressed: () =>
+                                  navigateTo(context, page: const MapScreen()),
                             ),
                             const SizedBox(height: 5),
                             _buildCardTile(
@@ -199,7 +201,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'EGP ${_cart.totalPrice + 10}',
+                          (_cart.totalPrice == 0) ? 'EGP 0' :  'EGP${_cart.totalPrice + 10}',
                           style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -214,7 +216,10 @@ class CartScreen extends StatelessWidget {
                         onPressed: () =>
                             Provider.of<CartProvider>(context, listen: false)
                                 .makeOrder(
-                                  location: 'Egypt, Damietta, New Damietta',
+                                  location: Provider.of<LocationServices>(
+                                          context,
+                                          listen: true)
+                                      .address,
                                   estimatedTime: '25-30',
                                   paymentMethod: 'cash',
                                 )

@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.48,
                   child: ListView.builder(
-                    itemCount: Provider.of<MainProvider>(context, listen: false)
+                    itemCount: Provider.of<MainProvider>(context, listen: true)
                         .dishesList
                         .length,
                     scrollDirection: Axis.horizontal,
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () => navigateTo(context,
                             page: DishDetailsScreen(
                                 dish: Provider.of<MainProvider>(context,
-                                        listen: false)
+                                        listen: true)
                                     .dishesList[index])),
                         child: Card(
                           color: Colors.white,
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       // child: Image.network(
                                       //     'https://images.phi.content-cdn.io/cdn-cgi/image/height=170,width=180,quality=50/https://martjackamstorage.azureedge.net/am-resources/c3877a59-69f7-40fa-bb17-ae5b9ac37732/Images/ProductImages/Large/Margherita-p1.png'),
                                       child: Image.network(
-                                          '${Provider.of<MainProvider>(context, listen: false).dishesList[index].imageUrl}'),
+                                          '${Provider.of<MainProvider>(context, listen: true).dishesList[index].imageUrl}'),
                                     ),
                                     IconButton(
                                         onPressed: () {},
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       const BoxConstraints(maxWidth: 200),
                                   child: Text(
                                     // 'Pizza Name',
-                                    '${Provider.of<MainProvider>(context, listen: false).dishesList[index].name}',
+                                    '${Provider.of<MainProvider>(context, listen: true).dishesList[index].name}',
                                     style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.black,
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(height: 5),
                                 Text(
                                   // 'Category',
-                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].category}',
+                                  '${Provider.of<MainProvider>(context, listen: true).dishesList[index].category}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
@@ -213,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const Spacer(),
                                 Text(
                                   // 'EGP 105',
-                                  'EGP ${Provider.of<MainProvider>(context, listen: false).dishesList[index].price}',
+                                  'EGP ${Provider.of<MainProvider>(context, listen: true).dishesList[index].price}',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 20),
                 ListView.builder(
-                  itemCount: Provider.of<MainProvider>(context, listen: false)
+                  itemCount: Provider.of<MainProvider>(context, listen: true)
                       .dishesList
                       .length,
                   shrinkWrap: true,
@@ -249,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () => navigateTo(
                       context,
                       page: DishDetailsScreen(
-                        dish: Provider.of<MainProvider>(context, listen: false)
+                        dish: Provider.of<MainProvider>(context, listen: true)
                             .dishesList[index],
                       ),
                     ),
@@ -274,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: Text(
                                     // 'Dish Name',
-                                    '${Provider.of<MainProvider>(context, listen: false).dishesList[index].name}',
+                                    '${Provider.of<MainProvider>(context, listen: true).dishesList[index].name}',
                                     style: const TextStyle(
                                       fontSize: 20,
                                       color: Colors.black,
@@ -285,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(height: 5),
                                 Text(
                                   // 'Category',
-                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].category}',
+                                  '${Provider.of<MainProvider>(context, listen: true).dishesList[index].category}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.grey,
@@ -294,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(height: 20),
                                 Text(
                                   // 'EGP 105',
-                                  'EGP ${Provider.of<MainProvider>(context, listen: false).dishesList[index].price}',
+                                  'EGP ${Provider.of<MainProvider>(context, listen: true).dishesList[index].price}',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
@@ -309,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               // child: Image.network(
                               //     'https://www.elmohamdy.com/uploads/meals/IMG_345621645508611.png'),
                               child: Image.network(
-                                  '${Provider.of<MainProvider>(context, listen: false).dishesList[index].imageUrl}'),
+                                  '${Provider.of<MainProvider>(context, listen: true).dishesList[index].imageUrl}'),
                             )
                           ],
                         ),
