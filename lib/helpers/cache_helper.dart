@@ -16,7 +16,7 @@ class CacheHelper {
     return await _prefs!.setDouble(key, value);
   }
 
-  static dynamic get(String key) async => _prefs!.get(key);
+  static dynamic get(String key) => _prefs!.get(key);
 
   static Future<bool> remove(String key) async => await _prefs!.remove(key);
 }

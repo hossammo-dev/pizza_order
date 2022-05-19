@@ -536,17 +536,20 @@ class _DishDetailsScreenState extends State<DishDetailsScreen> {
         ),
         child: Stack(
           alignment: Alignment.topRight,
-          children: const [
-            Icon(
+          children: [
+            const Icon(
               EvaIcons.shoppingBagOutline,
               color: Colors.black,
             ),
 
             //TODO: CART BADGE
-            //  CircleAvatar(
-            //   radius: 5,
-            //   backgroundColor: const Color(0XFFFFC56A),
-            // ),
+            if (Provider.of<CartProvider>(context, listen: true)
+                .cartList
+                .isNotEmpty)
+              const CircleAvatar(
+                radius: 5,
+                backgroundColor: Color(0XFFFFC56A),
+              ),
           ],
         ),
         // backgroundColor: const Color(0XFFFFC56A),

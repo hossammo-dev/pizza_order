@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () => navigateTo(context,
                             page: DishDetailsScreen(
                                 dish: Provider.of<MainProvider>(context,
-                                        listen: true)
+                                        listen: false)
                                     .dishesList[index])),
                         child: Card(
                           color: Colors.white,

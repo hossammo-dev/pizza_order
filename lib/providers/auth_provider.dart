@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_order/constants.dart';
+import 'package:pizza_order/helpers/cache_helper.dart';
 import 'package:pizza_order/models/user_model.dart';
 import 'package:pizza_order/services/firebase_services.dart';
 
@@ -15,6 +16,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> logUserIn({String? email, String? password}) async {
     FirebaseServices.signUserIn(email: email, password: password).then((user) {
       Constants.userId = user.user!.uid;
+      CacheHelper.save(key: 'user_id', value: user.user!.uid);
     }).catchError((error) {
       debugPrint(error.toString());
     });

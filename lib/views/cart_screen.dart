@@ -218,7 +218,7 @@ class CartScreen extends StatelessWidget {
                                 .makeOrder(
                                   location: Provider.of<LocationServices>(
                                           context,
-                                          listen: true)
+                                          listen: false)
                                       .address,
                                   estimatedTime: '25-30',
                                   paymentMethod: 'cash',
