@@ -6,6 +6,7 @@ import 'package:pizza_order/providers/auth_provider.dart';
 import 'package:pizza_order/providers/cart_provider.dart';
 import 'package:pizza_order/providers/main_provider.dart';
 import 'package:pizza_order/services/location_services.dart';
+import 'package:pizza_order/views/auth/login_and_register_screen.dart';
 import 'package:pizza_order/views/home_screen.dart';
 import 'package:pizza_order/views/splash_screen.dart';
 import 'package:provider/provider.dart';

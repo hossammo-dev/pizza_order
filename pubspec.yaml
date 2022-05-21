@@ -34,7 +34,7 @@ dependencies:
   firebase_core: ^1.15.0
   flutter:
     sdk: flutter
-  flutter_secure_storage: ^5.0.2
+  # flutter_secure_storage: ^5.0.2
   fluttertoast: ^8.0.9
   font_awesome_flutter: ^10.1.0
   geocoding: ^2.0.4
