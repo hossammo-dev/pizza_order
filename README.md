@@ -72,25 +72,25 @@ A delivery application using flutter framework, It helps people to order pizza f
 <table border>
     <tr>
         <th style="text-align:center">Splash Screen</th>
-        <th style="text-align:center">Auth</th>
-        <th style="text-align:center">Email Auth</th>
+<!--         <th style="text-align:center">Auth</th>
+        <th style="text-align:center">Email Auth</th> -->
     </tr>
     <tr>
-        <td><img src="./screenshots/splash.jpg" alt="" width="200"></td>
-        <td><img src="./screenshots/auth.jpg" alt="" width="200"></td>
-        <td><img src="./screenshots/login_user.jpg" alt="" width="200"></td>
+        <td><img src="./screenshots/splash.png" alt="" width="200"></td>
+<!--         <td><img src="./screenshots/auth.jpg" alt="" width="200"></td>
+        <td><img src="./screenshots/login_user.jpg" alt="" width="200"></td> -->
     <tr>
 </table>
 
 <table border>
     <tr>
         <th style="text-align:center">Login</th>
-        <th style="text-align:center">Show Password</th>
+        <th style="text-align:center">Register</th>
 <!--         <th style="text-align:center"></th> -->
     </tr>
     <tr>
-        <td><img src="./screenshots/login.jpg" alt="" width="200"></td>
-        <td><img src="./screenshots/login2.jpg" alt="" width="200"></td>
+        <td><img src="./screenshots/login.png" alt="" width="200"></td>
+        <td><img src="./screenshots/register.png" alt="" width="200"></td>
 <!--         <td><img src="./screenshots/account-another-user.png" alt="" width="200"></td> -->
     <tr>
 </table>
@@ -143,6 +143,19 @@ A delivery application using flutter framework, It helps people to order pizza f
     <tr>
         <td><img src="./screenshots/map.png" alt="" width="200"></td>
         <td><img src="./screenshots/change_location.png" alt="" width="200"></td>
+<!--         <td><img src="./screenshots/user_profile.jpg" alt="" width="200"></td> -->
+    <tr>
+</table>
+
+<table border>
+    <tr>
+        <th style="text-align:center">Pick Time</th>
+        <th style="text-align:center">Payment</th>
+<!--         <th style="text-align:center">User Profile</th> -->
+    </tr>
+    <tr>
+        <td><img src="./screenshots/pick_time.png" alt="" width="200"></td>
+        <td><img src="./screenshots/payment.png" alt="" width="200"></td>
 <!--         <td><img src="./screenshots/user_profile.jpg" alt="" width="200"></td> -->
     <tr>
 </table>
