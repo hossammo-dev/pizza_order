@@ -3,13 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:pizza_order/mini_views/map_screen.dart';
 import 'package:pizza_order/providers/cart_provider.dart';
 import 'package:pizza_order/services/location_services.dart';
+import 'package:pizza_order/services/payment_services.dart';
 import 'package:pizza_order/shared/shared.dart';
 import 'package:provider/provider.dart';
 
 import 'home_screen.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    super.initState();
+    PaymentServices.initRazorPay();
+  }
+
+  @override
+  void dispose() {
+    PaymentServices.clear();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +65,26 @@ class CartScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
-                        EvaIcons.close,
-                        color: Colors.black,
-                      ),
+                    Row(
+                      children: [
+                        if (_cart.cartList.isNotEmpty)
+                          IconButton(
+                            onPressed: () => _cart.emptyCart().whenComplete(
+                                () => navigateAndRemove(context,
+                                    page: const HomeScreen())),
+                            icon: const Icon(
+                              EvaIcons.trashOutline,
+                              color: Colors.black,
+                            ),
+                          ),
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(
+                            EvaIcons.close,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -130,15 +162,23 @@ class CartScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 5),
                             _buildCardTile(
-                              title: '25-30 min (ASAP)',
+                              // title: '25-30 min (ASAP)',
+                              title: _cart.time.format(context),
                               leadingIcon: EvaIcons.clockOutline,
-                              onEditPressed: () {},
+                              onEditPressed: () => showTimePicker(
+                                      context: context, initialTime: _cart.time)
+                                  .then((time) {
+                                if (time != null) {
+                                  _cart.changeDeliveryTime(time);
+                                }
+                              }),
                             ),
                             const SizedBox(height: 5),
                             _buildCardTile(
                               title: 'Cash',
                               leadingIcon: EvaIcons.creditCardOutline,
-                              onEditPressed: () {},
+                              onEditPressed: () => PaymentServices.checkOut(
+                                  totalPrice: _cart.totalPrice),
                             ),
                           ],
                         ),
@@ -201,7 +241,9 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          (_cart.totalPrice == 0) ? 'EGP 0' :  'EGP${_cart.totalPrice + 10}',
+                          (_cart.totalPrice == 0)
+                              ? 'EGP 0'
+                              : 'EGP ${_cart.totalPrice + 10}',
                           style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -220,7 +262,7 @@ class CartScreen extends StatelessWidget {
                                           context,
                                           listen: false)
                                       .address,
-                                  estimatedTime: '25-30',
+                                  estimatedTime: _cart.time.format(context),
                                   paymentMethod: 'cash',
                                 )
                                 .whenComplete(() => navigateAndRemove(context,

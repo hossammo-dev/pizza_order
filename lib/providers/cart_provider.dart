@@ -10,6 +10,10 @@ class CartProvider extends ChangeNotifier {
   Map<String, CartItemModel> _cartList = {};
   Map<String, CartItemModel> get cartList => _cartList;
 
+   TimeOfDay _time = TimeOfDay.now();
+  TimeOfDay get time => _time;
+
+
   int get totalPrice {
     int _total = 0;
     _cartList.forEach((_, value) {
@@ -51,24 +55,6 @@ class CartProvider extends ChangeNotifier {
         beef: beef,
       ),
     );
-    // } else {
-    //   _cartList.update(
-    //     dishModel.id!,
-    //     (existingCart) => CartItemModel(
-    //       dishName: existingCart.dishName,
-    //       dishImageUrl: existingCart.dishImageUrl,
-    //       dishPrice: existingCart.dishPrice,
-    //       quantity: existingCart.quantity! + 1,
-    //       size: existingCart.size,
-    //       cheese: existingCart.cheese,
-    //       onion: existingCart.onion,
-    //       bacon: existingCart.bacon,
-    //       beef: existingCart.beef,
-    //     ),
-    //   );
-    // }
-    // final String _tempData = json.encode(_cartList);
-    // CacheHelper.save(key: 'cart_list', value: _tempData);
     notifyListeners();
   }
 
@@ -91,9 +77,18 @@ class CartProvider extends ChangeNotifier {
         'cart_items': _tempList.map((e) => e.toJson()).toList(),
       },
     ).whenComplete(() {
-      _cartList = {};
-      print('isEmpty: ${_cartList.isEmpty}');
+      emptyCart();
     });
+    notifyListeners();
+  }
+
+  Future<void> emptyCart() async {
+    _cartList.clear();
+    notifyListeners();
+  }
+
+  void changeDeliveryTime(TimeOfDay? tempTime){
+    _time = tempTime!;
     notifyListeners();
   }
 }

@@ -249,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () => navigateTo(
                       context,
                       page: DishDetailsScreen(
-                        dish: Provider.of<MainProvider>(context, listen: true)
+                        dish: Provider.of<MainProvider>(context, listen: false)
                             .dishesList[index],
                       ),
                     ),
@@ -270,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Container(
                                   constraints: const BoxConstraints(
-                                    maxWidth: 180,
+                                    maxWidth: 170,
                                   ),
                                   child: Text(
                                     // 'Dish Name',
@@ -327,9 +327,23 @@ class _HomeScreenState extends State<HomeScreen> {
           context,
           page: const CartScreen(),
         ),
-        child: const Icon(
-          EvaIcons.shoppingBagOutline,
-          color: Colors.black,
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            const Icon(
+              EvaIcons.shoppingBagOutline,
+              color: Colors.black,
+            ),
+
+            //TODO: CART BADGE
+            if (Provider.of<CartProvider>(context, listen: true)
+                .cartList
+                .isNotEmpty)
+              const CircleAvatar(
+                radius: 5,
+                backgroundColor: Color(0XFFFFC56A),
+              ),
+          ],
         ),
         backgroundColor: const Color(0XFFFFC56A),
       ),

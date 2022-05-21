@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
+
+Future<bool?> defaultToast(String message) => Fluttertoast.showToast(
+      msg: message,
+      backgroundColor: Colors.black,
+      fontSize: 14,
+      textColor: Colors.white,
+    );
 
 //navigate to another page, but keep previous ones.
 void navigateTo(

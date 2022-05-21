@@ -32,6 +32,7 @@ class AuthProvider extends ChangeNotifier {
     FirebaseServices.createNewUser(email: email, password: password)
         .then((user) {
       Constants.userId = user.user!.uid;
+      CacheHelper.save(key: 'user_id', value: user.user!.uid);
       UserModel _userModel = UserModel(
         uid: Constants.userId,
         username: username,

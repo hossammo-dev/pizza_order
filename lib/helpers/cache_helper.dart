@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CacheHelper {
   static SharedPreferences? _prefs;
 
-  static void init() async {
+  static init() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
