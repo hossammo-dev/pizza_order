@@ -14,11 +14,36 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logUserIn({String? email, String? password}) async {
+
     FirebaseServices.signUserIn(email: email, password: password).then((user) {
       Constants.userId = user.user!.uid;
       CacheHelper.save(key: 'user_id', value: user.user!.uid);
+      
+      
     }).catchError((error) {
-      debugPrint(error.toString());
+      // debugPrint(error.toString());
+      // switch (error.code) {
+      //   case "ERROR_INVALID_EMAIL":
+      //     _message = "Your email address appears to be malformed.";
+      //     break;
+      //   case "ERROR_WRONG_PASSWORD":
+      //     _message = "Your password is wrong.";
+      //     break;
+      //   case "ERROR_USER_NOT_FOUND":
+      //     _message = "User with this email doesn't exist.";
+      //     break;
+      //   case "ERROR_USER_DISABLED":
+      //     _message = "User with this email has been disabled.";
+      //     break;
+      //   case "ERROR_TOO_MANY_REQUESTS":
+      //     _message = "Too many requests. Try again later.";
+      //     break;
+      //   case "ERROR_OPERATION_NOT_ALLOWED":
+      //     _message = "Signing in with Email and Password is not enabled.";
+      //     break;
+      //   default:
+      //     _message = "An undefined Error happened.";
+      // }
     });
     notifyListeners();
   }
@@ -48,5 +73,11 @@ class AuthProvider extends ChangeNotifier {
     }).catchError((error) {
       debugPrint(error.toString());
     });
+  }
+
+  Future<void> logUserOut() async {
+    await FirebaseServices.logOut();
+    await CacheHelper.remove('user_id');
+    Constants.userId = '';
   }
 }

@@ -15,6 +15,8 @@ class FirebaseServices {
       await _auth.signInWithEmailAndPassword(
           email: email!, password: password!);
 
+  static Future<void> logOut() async => await _auth.signOut();
+
   static Future<void> saveData(
       {required String? collection,
       String? secondCollection,

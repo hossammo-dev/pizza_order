@@ -46,15 +46,15 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _location =
-        Provider.of<LocationServices>(context, listen: false).location;
+    final _location = Provider.of<LocationServices>(context, listen: false);
     return Scaffold(
       body: Stack(
         children: [
           GoogleMap(
             onTap: (LatLng location) => _setMarker(location),
             initialCameraPosition: CameraPosition(
-              target: LatLng(_location!.latitude, _location.longitude),
+              target: LatLng(
+                  _location.location!.latitude, _location.location!.longitude),
               zoom: 14.4746,
             ),
             markers: _markers!,
@@ -67,15 +67,72 @@ class _MapScreenState extends State<MapScreen> {
               _mapController = controller;
             },
           ),
-          Positioned(
-              left: 10,
-              top: 30,
-              child: IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
-                  ))),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Positioned(
+              // left: 10,
+              // top: 30,
+              // child: IconButton(
+              //     onPressed: () => Navigator.pop(context),
+              //     icon: const Icon(
+              //       Icons.arrow_back,
+              //       color: Colors.black,
+              //     ))),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 30),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 100.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Card(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    elevation: 6.4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Current Address',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            _location.address,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

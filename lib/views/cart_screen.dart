@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pizza_order/mini_views/map_screen.dart';
 import 'package:pizza_order/providers/cart_provider.dart';
 import 'package:pizza_order/services/location_services.dart';
@@ -93,48 +94,65 @@ class _CartScreenState extends State<CartScreen> {
                 //BODY: ORDERS
                 SizedBox(
                   height: 250,
-                  child: ListView.builder(
-                    itemCount: Provider.of<CartProvider>(context, listen: true)
-                        .cartList
-                        .length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final _cartItemsList =
-                          Provider.of<CartProvider>(context, listen: false)
-                              .cartList
-                              .values
-                              .toList()[index];
-                      return ListTile(
-                        minVerticalPadding: 16,
-                        leading: Card(
-                          color: Colors.white,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                  child: (Provider.of<CartProvider>(context, listen: true)
+                          .cartList
+                          .isEmpty)
+                      ? Center(
+                          child: Lottie.asset(
+                            'assets/animations/empty_cart.json',
+                            height: 200,
+                            width: 200,
                           ),
-                          child: Image.network(_cartItemsList.dishImageUrl!),
+                        )
+                      : ListView.builder(
+                          itemCount:
+                              Provider.of<CartProvider>(context, listen: true)
+                                  .cartList
+                                  .length,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final _cartItemsList = Provider.of<CartProvider>(
+                                    context,
+                                    listen: false)
+                                .cartList
+                                .values
+                                .toList()[index];
+                            return ListTile(
+                              minVerticalPadding: 16,
+                              leading: Card(
+                                color: Colors.white,
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child:
+                                    Image.network(_cartItemsList.dishImageUrl!),
+                              ),
+                              title: Text(_cartItemsList.dishName!),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Size: ${_cartItemsList.size}'),
+                                  Text('x${_cartItemsList.cheese} cheese'),
+                                  if (_cartItemsList.onion!)
+                                    const Text('x1 onion'),
+                                  if (_cartItemsList.bacon!)
+                                    const Text('x1 bacon'),
+                                  if (_cartItemsList.beef!)
+                                    const Text('x1 beef'),
+                                ],
+                              ),
+                              trailing: Column(
+                                children: [
+                                  Text('EGP ${_cartItemsList.dishPrice}'),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                      '${_cartItemsList.quantity.toString()}X'),
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                        title: Text(_cartItemsList.dishName!),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Size: ${_cartItemsList.size}'),
-                            Text('x${_cartItemsList.cheese} cheese'),
-                            if (_cartItemsList.onion!) const Text('x1 onion'),
-                            if (_cartItemsList.bacon!) const Text('x1 bacon'),
-                            if (_cartItemsList.beef!) const Text('x1 beef'),
-                          ],
-                        ),
-                        trailing: Column(
-                          children: [
-                            Text('EGP ${_cartItemsList.dishPrice}'),
-                            const SizedBox(height: 5),
-                            Text('${_cartItemsList.quantity.toString()}X'),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
                 ),
                 const Divider(),
                 const SizedBox(height: 15),
