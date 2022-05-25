@@ -1,9 +1,10 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pizza_order/constants.dart';
 import 'package:pizza_order/mini_views/map_screen.dart';
 import 'package:pizza_order/providers/cart_provider.dart';
-import 'package:pizza_order/services/location_services.dart';
+import 'package:pizza_order/providers/location_provider.dart';
 import 'package:pizza_order/services/payment_services.dart';
 import 'package:pizza_order/shared/shared.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _cart = Provider.of<CartProvider>(context, listen: false);
+    final _cart = Provider.of<CartProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -99,7 +100,7 @@ class _CartScreenState extends State<CartScreen> {
                           .isEmpty)
                       ? Center(
                           child: Lottie.asset(
-                            'assets/animations/empty_cart.json',
+                            Constants.emptyCart,
                             height: 200,
                             width: 200,
                           ),
@@ -111,12 +112,8 @@ class _CartScreenState extends State<CartScreen> {
                                   .length,
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            final _cartItemsList = Provider.of<CartProvider>(
-                                    context,
-                                    listen: false)
-                                .cartList
-                                .values
-                                .toList()[index];
+                            final _cartItemsList =
+                                _cart.cartList.values.toList()[index];
                             return ListTile(
                               minVerticalPadding: 16,
                               leading: Card(
@@ -171,7 +168,7 @@ class _CartScreenState extends State<CartScreen> {
                         child: Column(
                           children: [
                             _buildCardTile(
-                              title: Provider.of<LocationServices>(context,
+                              title: Constants.locationProvider(context,
                                       listen: true)
                                   .address,
                               leadingIcon: EvaIcons.pinOutline,
@@ -180,7 +177,6 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             const SizedBox(height: 5),
                             _buildCardTile(
-                              // title: '25-30 min (ASAP)',
                               title: _cart.time.format(context),
                               leadingIcon: EvaIcons.clockOutline,
                               onEditPressed: () => showTimePicker(
@@ -229,21 +225,9 @@ class _CartScreenState extends State<CartScreen> {
                     const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          'Delivery fee',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          'EGP 10',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                        ),
+                      children: [
+                        _buildText('Delivery fee'),
+                        _buildText('EGP 10'),
                       ],
                     ),
                     const SizedBox(height: 15),
@@ -272,11 +256,12 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     const SizedBox(height: 25),
                     Center(
-                      child: MaterialButton(
+                      child: defaultButton(
+                        title: 'Place Order',
                         onPressed: () =>
                             Provider.of<CartProvider>(context, listen: false)
                                 .makeOrder(
-                                  location: Provider.of<LocationServices>(
+                                  location: Provider.of<LocationProvider>(
                                           context,
                                           listen: false)
                                       .address,
@@ -285,21 +270,6 @@ class _CartScreenState extends State<CartScreen> {
                                 )
                                 .whenComplete(() => navigateAndRemove(context,
                                     page: const HomeScreen())),
-                        elevation: 7.5,
-                        color: const Color(0xFFFFC56B),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        minWidth: 300,
-                        padding: const EdgeInsets.all(16),
-                        child: const Text(
-                          'Place Order',
-                          style: TextStyle(
-                            color: Colors.black,
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
                       ),
                     ),
                   ],
@@ -308,6 +278,16 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Text _buildText(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        color: Colors.grey,
+        fontSize: 16,
       ),
     );
   }

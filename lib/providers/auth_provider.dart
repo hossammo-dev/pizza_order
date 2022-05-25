@@ -8,18 +8,13 @@ class AuthProvider extends ChangeNotifier {
   bool _showPassword = false;
   bool get showPassword => _showPassword;
 
-  changePasswordVisibility() {
-    _showPassword = !_showPassword;
-    notifyListeners();
-  }
+  bool _isLogin = true;
+  bool get isLogin => _isLogin;
 
   Future<void> logUserIn({String? email, String? password}) async {
-
     FirebaseServices.signUserIn(email: email, password: password).then((user) {
       Constants.userId = user.user!.uid;
       CacheHelper.save(key: 'user_id', value: user.user!.uid);
-      
-      
     }).catchError((error) {
       // debugPrint(error.toString());
       // switch (error.code) {
@@ -79,5 +74,15 @@ class AuthProvider extends ChangeNotifier {
     await FirebaseServices.logOut();
     await CacheHelper.remove('user_id');
     Constants.userId = '';
+  }
+
+  changePasswordVisibility() {
+    _showPassword = !_showPassword;
+    notifyListeners();
+  }
+
+  changePageState() {
+    _isLogin = !_isLogin;
+    notifyListeners();
   }
 }

@@ -4,10 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:pizza_order/helpers/cache_helper.dart';
 import 'package:pizza_order/providers/auth_provider.dart';
 import 'package:pizza_order/providers/cart_provider.dart';
+import 'package:pizza_order/providers/dish_details_provider.dart';
 import 'package:pizza_order/providers/main_provider.dart';
-import 'package:pizza_order/services/location_services.dart';
-import 'package:pizza_order/views/auth/login_and_register_screen.dart';
-import 'package:pizza_order/views/home_screen.dart';
+import 'package:pizza_order/providers/location_provider.dart';
+import 'package:pizza_order/providers/map_provider.dart';
 import 'package:pizza_order/views/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -29,10 +29,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => LocationServices()),
+        ChangeNotifierProvider(create: (context) => LocationProvider()..getLocation()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => MainProvider()),
+        ChangeNotifierProvider(create: (context) => MainProvider()..getFavoriteDishes()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => MapProvider()),
+        ChangeNotifierProvider(create: (context) => DishDetailsProvider()),
       ],
       child: MaterialApp(
         title: 'Pizza Order',

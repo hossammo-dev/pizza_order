@@ -29,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
           page: (Constants.userId == '')
               ? const LoginAndRegisterScreen()
               : const HomeScreen(),
-          // page: const LoginAndRegisterScreen(),
         );
       },
     );
@@ -40,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Lottie.asset('assets/animations/pizza.json', repeat: false),
+        child: Lottie.asset(Constants.pizza, repeat: false),
       ),
     );
   }

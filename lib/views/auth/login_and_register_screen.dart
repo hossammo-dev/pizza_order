@@ -2,6 +2,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pizza_order/constants.dart';
 import 'package:pizza_order/helpers/cache_helper.dart';
 import 'package:pizza_order/providers/auth_provider.dart';
 import 'package:pizza_order/shared/shared.dart';
@@ -43,14 +44,16 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
     super.dispose();
   }
 
-  void _changePageState() {
-    setState(() {
-      _isLogin = !_isLogin;
-    });
-  }
+  // void _changePageState() {
+  //   setState(() {
+  //     _isLogin = !_isLogin;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final _authProvider = Constants.authProvider(context);
+
     return Scaffold(
       body: Center(
         child: Padding(
@@ -61,17 +64,8 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //TODO: CHANGE THIS TO THAE APP LOGO
-                  // Text(
-                  //   (_isLogin) ? 'Login' : 'REGISTER',
-                  //   style: const TextStyle(
-                  //     color: Colors.black,
-                  //     fontSize: 40,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
                   Lottie.asset(
-                    'assets/animations/pizza.json',
+                    Constants.pizza,
                     height: 250,
                     width: 250,
                   ),
@@ -92,7 +86,6 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                       controller: _nameController,
                       prefixIcon: EvaIcons.personOutline,
                     ),
-
                   if (!_isLogin) const SizedBox(height: 16),
                   defaultFormField(
                     hint: 'example@gmail.com',
@@ -104,7 +97,6 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                     controller: _emailController,
                     prefixIcon: EvaIcons.emailOutline,
                   ),
-
                   if (!_isLogin) const SizedBox(height: 16),
                   if (!_isLogin)
                     defaultFormField(
@@ -123,7 +115,6 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                       controller: _numberController,
                       prefixIcon: EvaIcons.phoneOutline,
                     ),
-
                   const SizedBox(height: 16),
                   defaultFormField(
                     hint: '*********',
@@ -139,15 +130,16 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                     controller: _passController,
                     prefixIcon: EvaIcons.lockOutline,
                     isPassword: true,
-                    hidePassword: true,
+                    hidePassword: Constants.authProvider(context, listen: true).showPassword,
+                    changePasswordVisibilty:
+                        () => _authProvider.changePasswordVisibility(),
                   ),
-
                   const SizedBox(height: 30),
                   MaterialButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         if (_isLogin) {
-                          Provider.of<AuthProvider>(context, listen: false)
+                          _authProvider
                               .logUserIn(
                             email: _emailController!.text,
                             password: _passController!.text,
@@ -157,7 +149,7 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                                 page: const HomeScreen());
                           });
                         } else {
-                          Provider.of<AuthProvider>(context, listen: false)
+                          _authProvider
                               .createAccount(
                                 username: _nameController!.text,
                                 email: _emailController!.text,
@@ -186,10 +178,9 @@ class _LoginAndRegisterScreenState extends State<LoginAndRegisterScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 10),
                   GestureDetector(
-                    onTap: () => _changePageState(),
+                    onTap: () => _authProvider.changePageState(),
                     child: Text(
                       (_isLogin)
                           ? 'Don\'t have an account? Register'

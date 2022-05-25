@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class LocationServices extends ChangeNotifier {
+class LocationProvider extends ChangeNotifier {
   String _address = 'Access Location...';
   String get address => _address;
 
@@ -19,7 +19,6 @@ class LocationServices extends ChangeNotifier {
     }
 
     _location = location ?? LatLng(_coords!.latitude, _coords.longitude);
-    print(_location?.latitude);
 
     List<Placemark> _placemarks = await GeocodingPlatform.instance
         .placemarkFromCoordinates(_location!.latitude, _location!.longitude);
@@ -31,9 +30,4 @@ class LocationServices extends ChangeNotifier {
     debugPrint(address);
     notifyListeners();
   }
-
-  // void changeLocation(LatLng newLocation) {
-  //   _location = newLocation;
-  //   notifyListeners();
-  // }
 }
